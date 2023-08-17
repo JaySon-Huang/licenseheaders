@@ -23,7 +23,7 @@ function fix_codes()
     python3 "${SCRIPT_DIR}/licenseheaders.py" \
         -t "${SCRIPT_DIR}/apache-2.tmpl" \
         -y 2023 \
-        -vv \
+        -v \
         -o "PingCAP, Inc" \
         -d "${PROJ_DIR}/" \
         -x "${PROJ_DIR}/**/CMakeLists.txt" \
@@ -73,21 +73,6 @@ function fix_codes()
            "${PROJ_DIR}/fix_license/*"
 }
 
-function tmp()
-{
-    python3 "${SCRIPT_DIR}/licenseheaders.py" \
-        -t "${SCRIPT_DIR}/apache-2.tmpl" \
-        -y 2023 \
-        -vv \
-        -o "PingCAP, Inc" \
-        -d "${PROJ_DIR}/.contrib" \
-        -x "${PROJ_DIR}/**/CMakeLists.txt" \
-           "${PROJ_DIR}/.devcontainer/*" \
-           "${PROJ_DIR}/contrib/*" \
-           "${PROJ_DIR}/fix_license/*"
-}
-# tmp
-
-#fix_cmakes
+fix_cmakes
 fix_codes
 
