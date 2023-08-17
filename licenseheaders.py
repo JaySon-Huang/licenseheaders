@@ -53,9 +53,9 @@ def update_c_style_comments(extensions):
         "blockCommentEndPattern": re.compile(r'\*/\s*$'),
         "lineCommentStartPattern": re.compile(r'^\s*//'),
         "lineCommentEndPattern": None,
-        "headerStartLine": "/*\n",
-        "headerEndLine": " */\n",
-        "headerLinePrefix": " * ",
+        "headerStartLine": "",
+        "headerEndLine": "",
+        "headerLinePrefix": "// ",
         "headerLineSuffix": None,
     }
 
@@ -84,9 +84,9 @@ TYPE_SETTINGS = {
         "blockCommentEndPattern": None,
         "lineCommentStartPattern": re.compile(r'^\s*#'),
         "lineCommentEndPattern": None,
-        "headerStartLine": "##\n",
-        "headerEndLine": "##\n",
-        "headerLinePrefix": "## ",
+        "headerStartLine": None,
+        "headerEndLine": None,
+        "headerLinePrefix": "# ",
         "headerLineSuffix": None
     },
     "perl": {
@@ -109,7 +109,7 @@ TYPE_SETTINGS = {
         "lineCommentStartPattern": re.compile(r'^\s*#'),
         "lineCommentEndPattern": None,
         "headerStartLine": None,
-        "headerEndLine": "\n",
+        "headerEndLine": None,
         "headerLinePrefix": "# ",
         "headerLineSuffix": None
     },
@@ -157,9 +157,9 @@ TYPE_SETTINGS = {
         "blockCommentEndPattern": re.compile(r'\]\]\s*$'),
         "lineCommentStartPattern": re.compile(r'\s*#'),
         "lineCommentEndPattern": None,
-        "headerStartLine": "#[[\n",
-        "headerEndLine": "]]\n",
-        "headerLinePrefix": "",
+        "headerStartLine": "",
+        "headerEndLine": "",
+        "headerLinePrefix": "# ",
         "headerLineSuffix": None
     },
     "markdown": {
@@ -254,9 +254,9 @@ TYPE_SETTINGS = {
         "blockCommentEndPattern": None,
         "lineCommentStartPattern": re.compile(r'^\s*#'),
         "lineCommentEndPattern": None,
-        "headerStartLine": "##\n",
-        "headerEndLine": "##\n",
-        "headerLinePrefix": "## ",
+        "headerStartLine": None,
+        "headerEndLine": None,
+        "headerLinePrefix": "# ",
         "headerLineSuffix": None
     },
     "zig": {
@@ -428,7 +428,7 @@ def parse_command_line(argv):
                              "File permissions are restored after successful header injection.")
     arguments = parser.parse_args(argv[1:])
 
-    # Sets log level to WARN going more verbose for each new -V.
+    # Sets log level to WARN going more verbose for each new -v.
     loglevel = max(4 - arguments.verbose_count, 1) * 10
     global LOGGER
     LOGGER.setLevel(loglevel)
@@ -929,7 +929,10 @@ def main():
                 if arguments.exclude and any([fnmatch.fnmatch(file, pat) for pat in arguments.exclude]):
                     LOGGER.info("Ignoring file {}".format(file))
                     continue
-                finfo = read_file(file, arguments, type_settings)
+                try:
+                    finfo = read_file(file, arguments, type_settings)
+                except:
+                    LOGGER.error("Exceptions when reading file %s", file)
                 if not finfo:
                     LOGGER.debug("File not supported %s", file)
                     continue
