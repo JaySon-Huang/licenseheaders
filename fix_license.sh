@@ -93,9 +93,14 @@ function fix_misc()
 "release-centos7-llvm/env/Makefile"
 "release-centos7-llvm/Makefile"
 "tests/testdata/issue-1055/metadata/t_45.sql"
+"contrib/tiflash-proxy-cmake/CMakeLists.txt"
+"contrib/arm-optimized-routines-cmake/CMakeLists.txt"
+"contrib/arm-optimized-routines-cmake/src/aor.c"
+"contrib/client-c/include/pingcap/common/MPMCQueue.h"
     )
     for f in ${files[@]}; do
         sed -i 's/Copyright 2022 PingCAP, Ltd./Copyright 2022 PingCAP, Inc./g' "${PROJ_DIR}/${f}"
+        sed -i 's/Copyright 2023 PingCAP, Ltd./Copyright 2023 PingCAP, Inc./g' "${PROJ_DIR}/${f}"
     done
 }
 
