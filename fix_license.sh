@@ -23,6 +23,8 @@ function fix_cmakes()
 
 function fix_codes()
 {
+    sed -i 's%^# !/usr/bin/env python3$%#!/usr/bin/env python3%g' "${PROJ_DIR}/tests/run-test.py"
+
     python3 "${SCRIPT_DIR}/licenseheaders.py" \
         -t "${SCRIPT_DIR}/apache-2.tmpl" \
         -y 2023 \
