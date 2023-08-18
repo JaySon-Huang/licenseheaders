@@ -5,7 +5,10 @@ fi
 
 SCRIPT_DIR=$(dirname "$0")
 
-PROJ_DIR="$1"
+set -x
+# We need to trim the '/' suffix or the exclude dose not work
+RAW_PROJ_DIR="$1"
+PROJ_DIR=${RAW_PROJ_DIR%/}
 
 function fix_cmakes()
 {
@@ -23,7 +26,10 @@ function fix_codes()
     python3 "${SCRIPT_DIR}/licenseheaders.py" \
         -t "${SCRIPT_DIR}/apache-2.tmpl" \
         -y 2023 \
-        -v \
+        -vv \
+        --additional-extensions "script=.test,.toml" \
+                                 "cmake=.cmake" \
+                                 "cpp=.ipp,.s,.S" \
         -o "PingCAP, Inc" \
         -d "${PROJ_DIR}/" \
         -x "${PROJ_DIR}/**/CMakeLists.txt" \
@@ -42,7 +48,6 @@ function fix_codes()
            "${PROJ_DIR}/.github/*" \
            "${PROJ_DIR}/docs/*" \
            "${PROJ_DIR}/tests/testsdata/*" \
-           "${PROJ_DIR}/release-centos7-llvm/dockerfiles/*" \
            "${PROJ_DIR}/**/.gitignore" \
            "${PROJ_DIR}/**/*.md" \
            "${PROJ_DIR}/**/*.json" \
@@ -65,14 +70,36 @@ function fix_codes()
            "${PROJ_DIR}/dbms/src/Flash/tests/gtest_*.out" \
            "${PROJ_DIR}/Cargo.lock" \
            "${PROJ_DIR}/Cargo.toml" \
+           "${PROJ_DIR}/**/Cargo.lock" \
+           "${PROJ_DIR}/**/Cargo.toml" \
            "${PROJ_DIR}/rust-toolchain" \
            "${PROJ_DIR}/.devcontainer/*" \
            "${PROJ_DIR}/**/OWNERS" \
            "${PROJ_DIR}/OWNERS_ALIASES" \
-           "${PROJ_DIR}/**/*.sql" \
-           "${PROJ_DIR}/fix_license/*"
+           "${PROJ_DIR}/**/*.sql"
+}
+
+function fix_misc()
+{
+    files=(\
+"release-centos7-llvm/dockerfiles/Dockerfile-tiflash-centos7"
+"release-centos7-llvm/dockerfiles/Dockerfile-tiflash-ci"
+"release-centos7-llvm/dockerfiles/Dockerfile-tiflash-ci-base"
+"release-centos7-llvm/dockerfiles/tiflash-llvm-base-aarch64"
+"release-centos7-llvm/dockerfiles/tiflash-llvm-base-amd64"
+"release-centos7-llvm/env/loader"
+"release-centos7-llvm/env/loader-env-dump"
+"release-centos7-llvm/env/tiflash-linker"
+"release-centos7-llvm/env/Makefile"
+"release-centos7-llvm/Makefile"
+"tests/testdata/issue-1055/metadata/t_45.sql"
+    )
+    for f in ${files[@]}; do
+        sed -i 's/Copyright 2022 PingCAP, Ltd./Copyright 2022 PingCAP, Inc./g' "${PROJ_DIR}/${f}"
+    done
 }
 
 fix_cmakes
 fix_codes
+fix_misc
 
