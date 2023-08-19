@@ -23,6 +23,7 @@ function fix_cmakes()
 
 function fix_codes()
 {
+    sed -i 's/copyright-owner: PingCAP, Ltd./copyright-owner: PingCAP, Inc./g' "${PROJ_DIR}/.github/licenserc.yml"
     sed -i 's%^# !/usr/bin/env python3$%#!/usr/bin/env python3%g' "${PROJ_DIR}/tests/run-test.py"
 
     python3 "${SCRIPT_DIR}/licenseheaders.py" \
@@ -50,6 +51,7 @@ function fix_codes()
            "${PROJ_DIR}/.github/*" \
            "${PROJ_DIR}/docs/*" \
            "${PROJ_DIR}/tests/testsdata/*" \
+           "${PROJ_DIR}/cmake-build-*" \
            "${PROJ_DIR}/**/.gitignore" \
            "${PROJ_DIR}/**/*.md" \
            "${PROJ_DIR}/**/*.json" \
