@@ -101,6 +101,7 @@ function fix_misc()
 "contrib/arm-optimized-routines-cmake/CMakeLists.txt"
 "contrib/arm-optimized-routines-cmake/src/aor.c"
 "contrib/client-c/include/pingcap/common/MPMCQueue.h"
+".devcontainer/Makefile"
     )
     for f in ${files[@]}; do
         sed -i 's/Copyright 2022 PingCAP, Ltd./Copyright 2022 PingCAP, Inc./g' "${PROJ_DIR}/${f}"
